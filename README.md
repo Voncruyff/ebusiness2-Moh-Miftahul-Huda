@@ -16,4 +16,5 @@ Daftar screenshot yang disertakan:
 
 4. **SS php artisan route:list**  
    File: `1screenshot/php artisan routelist SS.png`  
-   ![php artisan route:list SS](1screenshot/php artisan routelist SS.png)
+   ![php artisan route:list SS](1screenshot/php_artisan_routelist_SS.png)
+
