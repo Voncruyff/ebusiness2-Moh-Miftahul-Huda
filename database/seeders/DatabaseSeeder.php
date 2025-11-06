@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash; // 🧩 Tambahkan ini
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,11 +16,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // ✅ Buat akun ADMIN default
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Huda (Admin)',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('admin123'), // 🟢 gunakan Hash::make()
+            'role' => 'admin',
+        ]);
+
+        // ✅ Buat akun USER biasa
+        User::factory()->create([
+            'name' => 'Huda (User)',
+            'email' => 'user@example.com',
+            'password' => Hash::make('user123'), // 🟢 juga pakai Hash::make()
+            'role' => 'user',
         ]);
     }
 }
