@@ -19,12 +19,6 @@
                         Di sini user bisa melihat informasi umum, transaksi, atau fitur lain yang kamu sediakan nantinya.
                     </p>
                 </div>
-
-                <div class="mt-6">
-                    <a href="{{ route('dashboard') }}" class="text-blue-500 hover:text-blue-700 underline">
-                        Kembali ke Dashboard Utama
-                    </a>
-                </div>
             </div>
         </div>
     </div>

@@ -17,12 +17,6 @@
                 <div class="mt-4">
                     <p class="text-gray-700">Di sini nantinya Anda bisa mengatur data user, produk, atau fitur lain sesuai kebutuhan e-business Anda.</p>
                 </div>
-
-                <div class="mt-6">
-                    <a href="{{ route('dashboard') }}" class="text-blue-500 hover:text-blue-700 underline">
-                        Kembali ke Dashboard User
-                    </a>
-                </div>
             </div>
         </div>
     </div>
