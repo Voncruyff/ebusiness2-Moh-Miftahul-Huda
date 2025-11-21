@@ -95,76 +95,8 @@
 </head>
 <body class="bg-gray-50">
     
-    <!-- Sidebar -->
-    <aside id="sidebar" class="sidebar-transition fixed left-0 top-0 z-40 h-screen w-64 bg-white shadow-xl">
-        <div class="flex h-full flex-col">
-            <!-- Logo -->
-            <div class="flex items-center justify-between border-b border-gray-200 px-6 py-5">
-                <div class="flex items-center space-x-3">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-lg gradient-primary">
-                        <i class="fas fa-cash-register text-white text-lg"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold text-gray-800">SNV Pos</h1>
-                        <p class="text-xs text-gray-500">Admin Panel</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Navigation -->
-            <nav class="flex-1 overflow-y-auto px-4 py-6">
-                <div class="space-y-2">
-                    <a href="#" class="flex items-center space-x-3 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 px-4 py-3 text-white shadow-lg shadow-purple-500/30">
-                        <i class="fas fa-home w-5"></i>
-                        <span class="font-medium">Dashboard</span>
-                    </a>
-                    
-                    <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-600 hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-shopping-cart w-5"></i>
-                        <span class="font-medium">Transaksi</span>
-                    </a>
-                    
-                    <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-600 hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-box w-5"></i>
-                        <span class="font-medium">Produk</span>
-                    </a>
-                    
-                    <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-600 hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-users w-5"></i>
-                        <span class="font-medium">Pelanggan</span>
-                    </a>
-                    
-                    <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-600 hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-chart-line w-5"></i>
-                        <span class="font-medium">Laporan</span>
-                    </a>
-                    
-                    <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-600 hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-warehouse w-5"></i>
-                        <span class="font-medium">Inventory</span>
-                    </a>
-                    
-                    <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-600 hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-cog w-5"></i>
-                        <span class="font-medium">Pengaturan</span>
-                    </a>
-                </div>
-                
-                <!-- User Info -->
-                <div class="mt-8 rounded-lg bg-gradient-to-br from-purple-50 to-blue-50 p-4">
-                    <div class="flex items-center space-x-3">
-                        <div class="h-12 w-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold">
-                            {{ substr(Auth::user()->name, 0, 1) }}
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-semibold text-gray-800">{{ Auth::user()->name }}</p>
-                            <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </aside>
+    <!-- Include Sidebar -->
+    @include('layouts.sidebar')
     
     <!-- Main Content -->
     <div class="ml-64 min-h-screen">
@@ -172,9 +104,11 @@
         <header class="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm">
             <div class="flex items-center justify-between px-8 py-4">
                 <div class="flex items-center space-x-4">
-                    <button id="sidebarToggle" class="text-gray-500 hover:text-gray-700 lg:hidden">
+                    <!-- Hamburger Toggle Button -->
+                    <button id="sidebarToggle" class="lg:hidden text-gray-500 hover:text-gray-700 transition-colors p-2 hover:bg-gray-100 rounded-lg">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
+                    
                     <div>
                         <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
                         <p class="text-sm text-gray-500">Selamat datang kembali, {{ Auth::user()->name }}!</p>
@@ -188,40 +122,9 @@
                         <span class="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500"></span>
                     </button>
                     
-                    <!-- Profile Dropdown -->
-                    <div class="relative">
-                        <button id="profileDropdown" class="flex items-center space-x-3 rounded-lg p-2 hover:bg-gray-100">
-                            <div class="h-9 w-9 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
-                                {{ substr(Auth::user()->name, 0, 1) }}
-                            </div>
-                            <i class="fas fa-chevron-down text-gray-600 text-sm"></i>
-                        </button>
-                        
-                        <div id="dropdownMenu" class="dropdown-menu animate-slide-in absolute right-0 mt-2 w-56 rounded-lg bg-white shadow-xl border border-gray-200">
-                            <div class="px-4 py-3 border-b border-gray-100">
-                                <p class="text-sm font-semibold text-gray-800">{{ Auth::user()->name }}</p>
-                                <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
-                            </div>
-                            <div class="py-2">
-                                <a href="{{ route('profile.edit') }}" class="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                    <i class="fas fa-user-circle w-5"></i>
-                                    <span>Profile Saya</span>
-                                </a>
-                                <a href="#" class="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                    <i class="fas fa-cog w-5"></i>
-                                    <span>Pengaturan</span>
-                                </a>
-                            </div>
-                            <div class="border-t border-gray-100 py-2">
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="flex w-full items-center space-x-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                                        <i class="fas fa-sign-out-alt w-5"></i>
-                                        <span>Logout</span>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+                    <!-- User Avatar (Simple) -->
+                    <div class="h-9 w-9 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
+                        {{ substr(Auth::user()->name, 0, 1) }}
                     </div>
                 </div>
             </div>
@@ -561,22 +464,6 @@
                         }
                     }
                 }
-            }
-        });
-        
-        // Profile Dropdown Toggle
-        const profileDropdown = document.getElementById('profileDropdown');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        
-        profileDropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('show');
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!profileDropdown.contains(e.target)) {
-                dropdownMenu.classList.remove('show');
             }
         });
         

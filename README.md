@@ -42,6 +42,24 @@ Dashboard user dengan tampilan ringkas menampilkan riwayat pesanan dan informasi
 
 ---
 
+### 🛍️ Daftar Produk
+Daftar Produk untuk menage produk
+![Daftar Produk](ss/daftarproduk.png)
+
+---
+
+### ➕ Tambah Produk
+Tambah Produk fitur untuk menambahkan atau mendaftarkan produk
+![Tambah Produk](ss/tambahproduk.png)
+
+---
+
+### 🖊️ Edit Produk
+Fitur untuk Mengdit ulang produk yg telah terdaftar
+![Edit Produk](ss/editproduk.png)
+
+---
+
 ### 🧩 Route List
 Daftar lengkap route yang tersedia dalam aplikasi (via `php artisan route:list`).
 
