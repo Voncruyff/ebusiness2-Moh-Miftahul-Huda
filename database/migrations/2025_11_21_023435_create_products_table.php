@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('name'); // Nama produk
             $table->string('category')->nullable(); // Kategori
             $table->text('description')->nullable(); // Deskripsi
-            $table->decimal('purchase_price', 15, 2)->default(0); // Harga beli
-            $table->decimal('selling_price', 15, 2); // Harga jual
+            $table->bigInteger('purchase_price')->default(0);
+            $table->bigInteger('selling_price')->default(0);
             $table->integer('stock')->default(0); // Stok
             $table->string('unit')->default('pcs'); // Satuan (pcs, kg, liter, dll)
             $table->string('image')->nullable(); // Path gambar

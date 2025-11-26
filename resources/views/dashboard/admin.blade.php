@@ -385,95 +385,113 @@
     </div>
     
     <script>
-        // Sales Chart
-        const ctx = document.getElementById('salesChart').getContext('2d');
-        const salesChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['13 Nov', '14 Nov', '15 Nov', '16 Nov', '17 Nov', '18 Nov', '19 Nov'],
-                datasets: [{
-                    label: 'Penjualan (Juta Rupiah)',
-                    data: [5.2, 6.8, 5.9, 7.5, 6.2, 8.1, 7.3],
-                    borderColor: 'rgb(147, 51, 234)',
-                    backgroundColor: 'rgba(147, 51, 234, 0.1)',
-                    tension: 0.4,
-                    fill: true,
-                    pointBackgroundColor: 'rgb(147, 51, 234)',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 7
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 15,
-                            font: {
-                                size: 12,
-                                weight: '500'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 13,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 12
-                        },
-                        callbacks: {
-                            label: function(context) {
-                                return 'Penjualan: Rp ' + context.parsed.y + ' Juta';
-                            }
-                        }
-                    }
+        // Tunggu hingga DOM dan Chart.js siap
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pastikan Chart.js sudah loaded
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js belum loaded');
+                return;
+            }
+            
+            // Pastikan canvas element ada
+            const canvas = document.getElementById('salesChart');
+            if (!canvas) {
+                console.error('Canvas salesChart tidak ditemukan');
+                return;
+            }
+            
+            // Sales Chart
+            const ctx = canvas.getContext('2d');
+            const salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['13 Nov', '14 Nov', '15 Nov', '16 Nov', '17 Nov', '18 Nov', '19 Nov'],
+                    datasets: [{
+                        label: 'Penjualan (Juta Rupiah)',
+                        data: [5.2, 6.8, 5.9, 7.5, 6.2, 8.1, 7.3],
+                        borderColor: 'rgb(147, 51, 234)',
+                        backgroundColor: 'rgba(147, 51, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: 'rgb(147, 51, 234)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15,
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                }
+                            }
                         },
-                        ticks: {
-                            callback: function(value) {
-                                return 'Rp ' + value + 'M';
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: {
+                                size: 13,
+                                weight: 'bold'
                             },
-                            font: {
-                                size: 11
+                            bodyFont: {
+                                size: 12
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Penjualan: Rp ' + context.parsed.y + ' Juta';
+                                }
                             }
                         }
                     },
-                    x: {
-                        grid: {
-                            display: false
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp ' + value + 'M';
+                                },
+                                font: {
+                                    size: 11
+                                }
+                            }
                         },
-                        ticks: {
-                            font: {
-                                size: 11
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
                             }
                         }
                     }
                 }
-            }
+            });
+            
+            console.log('Chart berhasil dibuat');
         });
         
         // Sidebar Toggle for Mobile
         const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebar = document.getElementById('sidebar');
+        const sidebarElement = document.getElementById('sidebar'); // GANTI NAMA VARIABEL
         
-        if (sidebarToggle) {
+        if (sidebarToggle && sidebarElement) {
             sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('-translate-x-full');
+                sidebarElement.classList.toggle('-translate-x-full'); // GUNAKAN NAMA BARU
             });
         }
     </script>
