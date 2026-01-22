@@ -1,90 +1,126 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminHistoryController;
+use App\Http\Controllers\AdminOrderController;
+use App\Http\Controllers\AdminReportController;
+use App\Http\Controllers\AdminInventoryController;
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\HistoryController;
 
-// ✅ Halaman utama (welcome)
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Models\Product;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
-// ✅ Redirect otomatis ketika membuka /dashboard
+Route::view('/', 'welcome')->name('home');
+
 Route::get('/dashboard', function () {
     $user = auth()->user();
 
     if (!$user) {
-        return redirect('/login');
+        return redirect()->route('login');
     }
 
-    // Cek role berdasarkan kolom 'role' di tabel users
-    if ($user->role === 'admin') {
-        return redirect()->route('admin.dashboard');
-    }
+    return $user->role === 'admin'
+        ? redirect()->route('admin.dashboard')
+        : redirect()->route('user.dashboard');
+})->middleware('auth')->name('dashboard');
 
-    if ($user->role === 'user') {
-        return redirect()->route('user.dashboard');
-    }
 
-    return abort(403, 'Unauthorized');
-})->middleware(['auth'])->name('dashboard');
+// ==========================================================
+// ADMIN (auth + role:admin)
+// ==========================================================
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->as('admin.')
+    ->group(function () {
 
-// ✅ Halaman ADMIN (khusus admin)
-Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/history', [AdminHistoryController::class, 'index'])->name('history');
+        Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+        Route::get('/reports', [AdminReportController::class, 'index'])->name('reports');
 
-    // Dashboard
-    Route::get('/admin', function () {
-        return view('dashboard.admin'); // resources/views/dashboard/admin.blade.php
-    })->name('admin.dashboard');
+        // ✅ Inventory
+        Route::get('/inventory', [AdminInventoryController::class, 'index'])->name('inventory');
 
-    // Transaksi
-    Route::get('/admin/transactions', function () {
-        return view('fitur.transactions');
-    })->name('admin.transactions');
+        // ✅ HTMX partial detail (no kedip)
+        Route::get('/inventory/detail/{id}', [AdminInventoryController::class, 'detail'])->name('inventory.detail');
 
-    // Produk - Resource Route
-    Route::resource('admin/products', ProductController::class)->names([
-        'index' => 'admin.products',
-        'store' => 'admin.products.store',
-        'show' => 'admin.products.show',
-        'update' => 'admin.products.update',
-        'destroy' => 'admin.products.destroy',
+        // ✅ Restock
+        Route::post('/inventory/{product}/restock', [AdminInventoryController::class, 'restock'])->name('inventory.restock');
+
+        // Pages lain (statis)
+        Route::view('/transactions', 'fitur.transactions')->name('transactions');
+        Route::view('/customers', 'fitur.customers')->name('customers');
+        Route::view('/settings', 'fitur.settings')->name('settings');
+
+        // Produk CRUD
+        Route::resource('products', ProductController::class)->except(['create', 'edit']);
+    });
+
+
+// ==========================================================
+// USER (auth + role:user)
+// ==========================================================
+Route::middleware(['auth', 'role:user'])->group(function () {
+
+    Route::get('/user', function () {
+        return view('dashboardUser.user');
+    })->name('user.dashboard');
+
+    Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/keranjang/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/keranjang/update', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/keranjang/remove', [CartController::class, 'remove'])->name('cart.remove');
+
+    Route::get('/history', [HistoryController::class, 'index'])->name('user.history');
+
+    Route::get('/stream-products', [ProductController::class, 'streamProducts'])->name('user.stream-products');
+
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+
+    Route::get('/payment/{order}', [PaymentController::class, 'show'])->name('payment.show');
+    Route::post('/payment/pay', [PaymentController::class, 'pay'])->name('payment.pay');
+    Route::get('/payment/{order}/success', [PaymentController::class, 'success'])->name('payment.success');
+});
+
+
+// ==========================================================
+// SSE LEGACY (kalau masih dipakai; kalau tidak, hapus)
+// ==========================================================
+Route::get('/sse/products', function () {
+
+    return new StreamedResponse(function () {
+        while (true) {
+            $products = Product::latest()->get();
+            echo "data: " . json_encode($products) . "\n\n";
+            @ob_flush();
+            @flush();
+            sleep(2);
+        }
+    }, 200, [
+        'Content-Type'  => 'text/event-stream',
+        'Cache-Control' => 'no-cache',
+        'Connection'    => 'keep-alive',
     ]);
 
-    // Pelanggan
-    Route::get('/admin/customers', function () {
-        return view('fitur.customers');
-    })->name('admin.customers');
+})->middleware(['auth', 'role:user'])->name('user.sse-products');
 
-    // Laporan
-    Route::get('/admin/reports', function () {
-        return view('fitur.reports');
-    })->name('admin.reports');
 
-    // Inventory
-    Route::get('/admin/inventory', function () {
-        return view('fitur.inventory');
-    })->name('admin.inventory');
-
-    // Pengaturan
-    Route::get('/admin/settings', function () {
-        return view('fitur.settings');
-    })->name('admin.settings');
-});
-
-// ✅ Halaman USER (khusus user)
-Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/user', function () {
-        return view('dashboard.user'); // resources/views/dashboard/user.blade.php
-    })->name('user.dashboard');
-});
-
-// ✅ Halaman profil (bawaan Breeze)
+// ==========================================================
+// Profile (Breeze)
+// ==========================================================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// ✅ Route bawaan auth (login/register)
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -37,7 +37,8 @@ class ProductController extends Controller
         $products = $query->orderBy('created_at', 'desc')->paginate(10);
         $categories = Product::distinct()->pluck('category')->filter();
 
-        return view('fitur.products', compact('products', 'categories'));
+        return view('dashboard.products', compact('products', 'categories'));
+
     }
 
     /**
@@ -138,4 +139,24 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products')->with('success', 'Produk berhasil dihapus!');
     }
+
+    public function streamProducts()
+{
+    return response()->stream(function () {
+        while (true) {
+            $products = Product::active()->orderBy('created_at', 'desc')->get();
+
+            echo "data: " . json_encode($products) . "\n\n";
+            ob_flush();
+            flush();
+            sleep(1);
+        }
+    }, 200, [
+        "Content-Type" => "text/event-stream",
+        "Cache-Control" => "no-cache",
+        "Connection" => "keep-alive",
+    ]);
+}
+
+
 }

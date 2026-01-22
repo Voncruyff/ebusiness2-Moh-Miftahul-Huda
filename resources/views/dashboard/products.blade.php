@@ -19,7 +19,8 @@
 <div class="flex h-screen overflow-hidden">
 
     {{-- SIDEBAR --}}
-    @include('layouts.sidebar')
+    @include('dashboard.adminsidebar')
+
 
     {{-- MAIN CONTENT --}}
     <div class="flex-1 flex flex-col overflow-hidden lg:ml-64 transition-all duration-300">
@@ -61,7 +62,9 @@
                 <div class="flex flex-wrap gap-4 justify-between">
 
                     {{-- SEARCH & FILTERS --}}
-                    <form method="GET" action="{{ route('admin.products')
+                    
+                    <form method="GET" action="{{ route('admin.products.index')
+
  }}"
                           id="filterForm"
                           class="flex flex-col md:flex-row gap-3 flex-1">
