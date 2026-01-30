@@ -79,7 +79,9 @@ class ProductController extends Controller
 
         Product::create($validated);
 
-        return redirect()->route('admin.products')->with('success', 'Produk berhasil ditambahkan!');
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Produk berhasil ditambahkan!');
+
     }
 
     /**
@@ -123,7 +125,9 @@ class ProductController extends Controller
 
         $product->update($validated);
 
-        return redirect()->route('admin.products')->with('success', 'Produk berhasil diupdate!');
+        return redirect()->route('admin.products.index')
+    ->with('success', 'Produk berhasil diupdate!');
+
     }
 
     /**
@@ -137,7 +141,8 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('admin.products')->with('success', 'Produk berhasil dihapus!');
+        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil ditambahkan!');
+
     }
 
     public function streamProducts()
