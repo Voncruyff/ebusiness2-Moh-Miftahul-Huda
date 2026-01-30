@@ -13,13 +13,6 @@ Dibangun menggunakan Laravel Framework untuk memenuhi tugas mata kuliah E-Busine
 
 ---
 
-## 📋 Deskripsi Project
-
-Aplikasi **SNV Pos** adalah sistem Point of Sale berbasis web yang dirancang untuk memudahkan manajemen transaksi penjualan. Aplikasi ini memiliki dua role utama: **Admin** dan **User**, dengan fitur-fitur yang disesuaikan untuk masing-masing peran.
-
-
----
-
 ## 👥 User Roles
 
 | Role | Username | Password | Akses |
@@ -30,6 +23,9 @@ Aplikasi **SNV Pos** adalah sistem Point of Sale berbasis web yang dirancang unt
 
 ---
 
+## 📋 Deskripsi Project
+
+Aplikasi **SNV Pos** adalah sistem Point of Sale berbasis web yang dirancang untuk memudahkan manajemen transaksi penjualan. Aplikasi ini memiliki dua role utama: **Admin** dan **User**, dengan fitur-fitur yang disesuaikan untuk masing-masing peran.
 
 
 ## 📸 Screenshots
@@ -77,14 +73,5 @@ Fitur untuk Mengdit ulang produk yg telah terdaftar
 Daftar lengkap route yang tersedia dalam aplikasi (via `php artisan route:list`).
 
 ![Route List](ss/php.png)
-
----
-
-## 👥 User Roles
-
-| Role | Username | Password | Akses |
-|------|----------|----------|-------|
-| **Admin** | admin@example.com | admin123 | Full Access |
-| **User** | user@example.com | user123 | Limited Access |
 
 ---
