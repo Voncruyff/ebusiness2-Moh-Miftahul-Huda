@@ -17,7 +17,20 @@ Dibangun menggunakan Laravel Framework untuk memenuhi tugas mata kuliah E-Busine
 
 Aplikasi **SNV Pos** adalah sistem Point of Sale berbasis web yang dirancang untuk memudahkan manajemen transaksi penjualan. Aplikasi ini memiliki dua role utama: **Admin** dan **User**, dengan fitur-fitur yang disesuaikan untuk masing-masing peran.
 
+
 ---
+
+## 👥 User Roles
+
+| Role | Username | Password | Akses |
+|------|----------|----------|-------|
+| **Admin** | admin@example.com | admin123 | Full Access |
+| **User** | user@example.com | user123 | Limited Access |
+| **Admin** | admin2@example.com | admin123 | Full Access |
+
+---
+
+
 
 ## 📸 Screenshots
 
