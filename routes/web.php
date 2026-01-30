@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminHistoryController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\AdminInventoryController;
+use App\Http\Controllers\AdminUserController; // ✅ BALIKIN
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
@@ -18,8 +19,18 @@ use App\Http\Controllers\HistoryController;
 use App\Models\Product;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-Route::view('/', 'welcome')->name('home');
+// ✅ jangan hapus apapun: route ini kita "pertahankan idenya"
+// Tapi biar link utama gak nyangkut, kita bikin / aman:
+// - belum login -> login
+// - sudah login -> dashboard (role based)
+Route::get('/', function () {
+    if (!auth()->check()) {
+        return redirect()->route('login');
+    }
+    return redirect()->route('dashboard');
+})->name('home');
 
+// ✅ dashboard role based (punyamu, dibuat lebih aman)
 Route::get('/dashboard', function () {
     $user = auth()->user();
 
@@ -27,7 +38,9 @@ Route::get('/dashboard', function () {
         return redirect()->route('login');
     }
 
-    return $user->role === 'admin'
+    $role = $user->role ?? 'user';
+
+    return $role === 'admin'
         ? redirect()->route('admin.dashboard')
         : redirect()->route('user.dashboard');
 })->middleware('auth')->name('dashboard');
@@ -45,6 +58,10 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/history', [AdminHistoryController::class, 'index'])->name('history');
         Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
         Route::get('/reports', [AdminReportController::class, 'index'])->name('reports');
+
+        // ✅ Manage User (BALIK)
+        Route::resource('users', AdminUserController::class)->except(['show']);
+        Route::patch('/users/{user}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
 
         // ✅ Inventory
         Route::get('/inventory', [AdminInventoryController::class, 'index'])->name('inventory');

@@ -30,23 +30,30 @@
     <header class="sticky top-0 z-30 bg-white/80 backdrop-blur border-b border-gray-200">
       <div class="px-6 lg:px-10">
         <div class="flex h-16 items-center justify-between">
+
           <div class="flex items-center gap-3">
-            <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 shadow-sm">
-              <i class="fas fa-credit-card text-white text-sm"></i>
-            </div>
+            {{-- tombol sidebar (mobile) --}}
+            <button id="sidebarToggle"
+              class="lg:hidden text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+
             <div>
-              <h1 class="text-sm font-bold text-gray-800">SNV Pos</h1>
-              <p class="text-xs text-gray-500">Checkout</p>
+              <h1 class="text-base font-extrabold text-gray-800">Checkout</h1>
+              <p class="text-xs text-gray-500">Buat pesanan & lanjut pembayaran</p>
             </div>
           </div>
 
           <a href="{{ route('cart.index') }}"
-             class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 shadow-sm">
-            <i class="fas fa-arrow-left"></i> Kembali ke Keranjang
+            class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 shadow-sm">
+            <i class="fas fa-arrow-left"></i> Kembali
           </a>
+
         </div>
       </div>
     </header>
+
+
 
     @php
       $cart = session()->get('cart', []);

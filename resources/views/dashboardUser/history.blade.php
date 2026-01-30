@@ -29,20 +29,7 @@
       <header class="sticky top-0 z-30 bg-white/80 backdrop-blur border-b border-gray-200">
         <div class="px-6 lg:px-10">
           <div class="flex h-16 items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 shadow-sm">
-                <i class="fas fa-clock-rotate-left text-white text-sm"></i>
-              </div>
-              <div>
-                <h1 class="text-sm font-bold text-gray-800">SNV Pos</h1>
-                <p class="text-xs text-gray-500">Riwayat Transaksi</p>
-              </div>
-            </div>
-
-            <a href="{{ route('user.dashboard') }}"
-               class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 shadow-sm">
-              <i class="fas fa-house"></i> Dashboard
-            </a>
+            <h1 class="text-lg font-extrabold text-gray-800">History</h1>
           </div>
         </div>
       </header>

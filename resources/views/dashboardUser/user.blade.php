@@ -35,19 +35,28 @@
     <div class="content-with-sidebar">
 
       <!-- HEADER (tetap sticky) -->
+      <!-- HEADER (sticky) -->
       <header class="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
         <div class="w-full px-4 sm:px-6 lg:px-8">
           <div class="flex h-16 items-center justify-between">
-            <div class="flex items-center space-x-2">
+            
+            {{-- LEFT: Judul halaman saja --}}
+            <div class="flex items-center gap-3">
+              <button id="sidebarToggle"
+                class="lg:hidden text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg">
+                <i class="fas fa-bars text-xl"></i>
+              </button>
+
               <div>
-                <h1 class="text-sm font-bold text-gray-800">SNV Pos</h1>
-                <p class="text-xs text-gray-500">Daftar Produk</p>
+                <h1 class="text-lg font-extrabold text-gray-800">Produk Tersedia</h1>
+                <p class="text-xs text-gray-500">Pilih produk untuk melihat detail</p>
               </div>
             </div>
 
+            {{-- RIGHT --}}
             <div class="flex items-center space-x-3">
               <a href="{{ route('cart.index') }}"
-                 class="hidden sm:inline-flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                class="hidden sm:inline-flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
                 <i class="fas fa-cart-shopping"></i>
                 Keranjang
               </a>
@@ -60,9 +69,11 @@
                 {{ substr(Auth::user()->name, 0, 1) }}
               </div>
             </div>
+
           </div>
         </div>
       </header>
+
 
       <!-- MAIN: dibuat full tinggi layar minus header, supaya yang scroll cuma konten bawah -->
       <main class="w-full px-4 sm:px-6 lg:px-8 pt-6 pb-6 h-[calc(100vh-64px)] flex flex-col">

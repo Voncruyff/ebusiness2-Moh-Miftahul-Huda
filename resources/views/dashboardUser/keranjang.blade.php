@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Keranjang - SNV Pos</title>
+  <title>Keranjang - POSin</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,33 +27,25 @@
 
     <div class="content-with-sidebar">
 
-      <!-- HEADER -->
+      <!-- HEADER (FIX: cuma "Keranjang") -->
       <header class="sticky top-0 z-30 bg-white/80 backdrop-blur border-b border-gray-200">
         <div class="px-6 lg:px-10">
           <div class="flex h-16 items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="flex h-9 w-9 items-center justify-center rounded-lg gradient-primary shadow-sm">
-                <i class="fas fa-cart-shopping text-white text-sm"></i>
-              </div>
-              <div>
-                <h1 class="text-sm font-bold text-gray-800">SNV Pos</h1>
-                <p class="text-xs text-gray-500">Keranjang</p>
-              </div>
-            </div>
-
-            <a href="{{ route('user.dashboard') }}"
-               class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 shadow-sm">
-              <i class="fas fa-arrow-left"></i> Kembali
-            </a>
+            <h1 class="text-lg font-extrabold text-gray-800">Keranjang</h1>
           </div>
         </div>
       </header>
+
 
       <!-- MAIN -->
       <main class="px-6 lg:px-10 py-8">
         <div class="mb-6 flex items-center justify-between">
           <h2 class="text-xl font-bold text-gray-800">Keranjang</h2>
         </div>
+
+        @php
+          $cart = session()->get('cart', []);
+        @endphp
 
         @if(empty($cart))
           <div class="rounded-2xl bg-white p-8 shadow border border-gray-100 text-center">
@@ -69,9 +61,16 @@
           </div>
         @else
           @php
+            $cart = session()->get('cart', []);
+
+            // ✅ FIX stok: ambil stok terbaru dari DB (tanpa "use")
+            $productIds = array_map('intval', array_keys($cart));
+            $stocks = \App\Models\Product::whereIn('id', $productIds)->pluck('stock', 'id')->toArray();
+
             $grand = 0;
-            foreach ($cart as $it) { $grand += ($it['price'] * $it['qty']); }
+            foreach ($cart as $it) { $grand += ((int)$it['price'] * (int)$it['qty']); }
           @endphp
+
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
@@ -97,10 +96,18 @@
               <div class="divide-y">
                 @foreach($cart as $id => $item)
                   @php
-                    $total = $item['price'] * $item['qty'];
-                    $img = $item['image'] ?? null;
-                    $stock = (int) ($item['stock'] ?? 0);
+                    // ✅ FIX stok per item dari DB (bukan dari session)
+                    $stock = (int) ($stocks[(int)$id] ?? 0);
                     $maxQty = $stock > 0 ? $stock : 1;
+
+                    // clamp qty tampilannya biar ga lebih dari stok terbaru
+                    $qtyDisplay = (int)($item['qty'] ?? 1);
+                    if ($stock > 0 && $qtyDisplay > $maxQty) $qtyDisplay = $maxQty;
+                    if ($qtyDisplay < 1) $qtyDisplay = 1;
+
+                    $total = ((int)$item['price'] * $qtyDisplay);
+
+                    $img = $item['image'] ?? null;
                   @endphp
 
                   <div
@@ -162,7 +169,7 @@
                         <div>
                           <p class="text-xs text-gray-500">Harga</p>
                           <p class="font-bold text-gray-800">
-                            Rp {{ number_format($item['price'], 0, ',', '.') }}
+                            Rp {{ number_format((int)$item['price'], 0, ',', '.') }}
                           </p>
                         </div>
 
@@ -180,7 +187,7 @@
                             type="number"
                             min="1"
                             max="{{ $maxQty }}"
-                            value="{{ $item['qty'] }}"
+                            value="{{ $qtyDisplay }}"
                             data-qty
                             data-id="{{ $id }}"
                             class="h-9 w-20 rounded-xl border border-gray-200 px-3 text-center font-semibold text-gray-800"
@@ -207,7 +214,11 @@
                         </div>
                       </div>
 
-                      @if($stock > 0 && $item['qty'] >= $stock)
+                      @if($stock <= 0)
+                        <p class="mt-2 text-xs text-red-700 bg-red-50 border border-red-100 inline-flex rounded-lg px-2 py-1">
+                          Stok habis. Item ini tidak bisa di-checkout.
+                        </p>
+                      @elseif($qtyDisplay >= $stock)
                         <p class="mt-2 text-xs text-yellow-700 bg-yellow-50 border border-yellow-100 inline-flex rounded-lg px-2 py-1">
                           Qty sudah maksimal stok.
                         </p>
@@ -444,7 +455,6 @@
           return;
         }
 
-        // arahkan ke halaman checkout (GET)
         const url = "/checkout?ids=" + encodeURIComponent(ids.join(','));
         window.location.href = url;
       });

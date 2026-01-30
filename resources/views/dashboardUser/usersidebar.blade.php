@@ -69,14 +69,11 @@
 
     <!-- Header -->
     <div class="flex items-center justify-between border-b border-gray-200 px-6 py-5 bg-gradient-to-r from-purple-50 via-blue-50 to-purple-50">
-      <div class="flex items-center space-x-3">
-        <div class="logo-pulse flex h-10 w-10 items-center justify-center rounded-lg gradient-primary shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-110">
-          <i class="fas fa-boxes-stacked text-white text-lg"></i>
-        </div>
-        <div>
-          <h1 class="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">SNV Pos</h1>
-          <p class="text-xs text-gray-500 font-medium">User Panel</p>
-        </div>
+      <div>
+        <h1 class="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          POSin
+        </h1>
+        <p class="text-xs text-gray-500 font-medium">User Panel</p>
       </div>
 
       <button id="closeSidebar" class="lg:hidden text-gray-500 hover:text-gray-700 transition-colors">

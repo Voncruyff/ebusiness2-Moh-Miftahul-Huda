@@ -86,14 +86,11 @@
 
     <!-- Logo Header -->
     <div class="flex items-center justify-between border-b border-gray-200 px-6 py-5 bg-gradient-to-r from-purple-50 via-blue-50 to-purple-50">
-      <div class="flex items-center space-x-3">
-        <div class="logo-pulse flex h-10 w-10 items-center justify-center rounded-lg gradient-primary shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-110">
-          <i class="fas fa-cash-register text-white text-lg"></i>
-        </div>
-        <div>
-          <h1 class="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">SNV Pos</h1>
-          <p class="text-xs text-gray-500 font-medium">Admin Panel</p>
-        </div>
+      <div>
+        <h1 class="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          POSin
+        </h1>
+        <p class="text-xs text-gray-500 font-medium">Admin Panel</p>
       </div>
 
       <!-- Close Button (Mobile) -->
@@ -102,6 +99,7 @@
       </button>
     </div>
 
+
     <!-- Navigation -->
     <nav class="flex-1 overflow-y-auto px-4 py-6 custom-scrollbar">
       <div class="space-y-2">
@@ -109,8 +107,8 @@
         <!-- Dashboard -->
         <a href="{{ route('admin.dashboard') }}"
           class="menu-item group flex items-center space-x-3 rounded-xl px-4 py-3 transition-all duration-300
-          {{ request()->routeIs('admin.dashboard') 
-           ? 'active bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/30' 
+          {{ request()->routeIs('admin.dashboard')
+           ? 'active bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/30'
            : 'text-gray-600 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50' }}">
           <div class="icon-wrapper {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-purple-500' }}">
             <i class="fas fa-house text-lg"></i>
@@ -121,7 +119,7 @@
           @endif
         </a>
 
-        <!-- Produk (satu-satunya fitur yang ready) -->
+        <!-- Produk -->
         <a href="{{ route('admin.products.index') }}"
           class="menu-item group flex items-center space-x-3 rounded-xl px-4 py-3 transition-all duration-300
           {{ request()->routeIs('admin.products.*')
@@ -139,13 +137,30 @@
             @endif
         </a>
 
+        <!-- Manage User (BARU) -->
+        <a href="{{ route('admin.users.index') }}"
+          class="menu-item group flex items-center space-x-3 rounded-xl px-4 py-3 transition-all duration-300
+          {{ request()->routeIs('admin.users.*')
+              ? 'active bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/30'
+              : 'text-gray-600 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50' }}">
+
+            <div class="icon-wrapper {{ request()->routeIs('admin.users.*') ? 'text-white' : 'text-emerald-500' }}">
+                <i class="fas fa-users text-lg"></i>
+            </div>
+
+            <span class="font-semibold flex-1">Manage User</span>
+
+            @if (request()->routeIs('admin.users.*'))
+                <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            @endif
+        </a>
 
         <!-- History -->
         <a href="{{ route('admin.history') }}"
           class="menu-item group flex items-center space-x-3 rounded-xl px-4 py-3
                   transition-all duration-300
-                  {{ request()->routeIs('admin.history') 
-                      ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg' 
+                  {{ request()->routeIs('admin.history')
+                      ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg'
                       : 'text-gray-600 hover:bg-pink-50 hover:text-pink-600' }}">
 
           <div class="icon-wrapper">
@@ -155,13 +170,11 @@
           <span class="font-semibold flex-1">History</span>
         </a>
 
-
-        <!-- Laporan (DISABLED dulu) -->
-        {{-- Laporan --}}
+        <!-- Laporan -->
         <a href="{{ route('admin.reports') }}"
           class="menu-item group flex items-center space-x-3 rounded-xl px-4 py-3 transition-all duration-300
-                  {{ request()->routeIs('admin.reports') 
-                      ? 'bg-indigo-50 text-indigo-700 font-bold' 
+                  {{ request()->routeIs('admin.reports')
+                      ? 'bg-indigo-50 text-indigo-700 font-bold'
                       : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800' }}">
 
           <div class="icon-wrapper text-indigo-500">
@@ -171,13 +184,11 @@
           <span class="font-semibold flex-1">Laporan</span>
         </a>
 
-
-        <!-- Inventory (DISABLED dulu) -->
-        {{-- Inventory --}}
+        <!-- Inventory -->
         <a href="{{ route('admin.inventory') }}"
           class="menu-item group flex items-center space-x-3 rounded-xl px-4 py-3 transition-all duration-300
-                  {{ request()->routeIs('admin.inventory') 
-                      ? 'bg-yellow-50 text-yellow-700 font-bold' 
+                  {{ request()->routeIs('admin.inventory')
+                      ? 'bg-yellow-50 text-yellow-700 font-bold'
                       : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800' }}">
 
           <div class="icon-wrapper text-yellow-500">
@@ -186,7 +197,6 @@
 
           <span class="font-semibold flex-1">Inventory</span>
         </a>
-
 
       </div>
 
