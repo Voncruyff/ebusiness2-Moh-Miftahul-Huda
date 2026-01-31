@@ -1,36 +1,25 @@
-FROM php:8.2-fpm
+FROM php:8.2-apache
 
-# system deps + nodejs
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    nginx git unzip curl ca-certificates \
-    libzip-dev libpng-dev libonig-dev libxml2-dev \
- && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
- && apt-get install -y nodejs \
- && docker-php-ext-install pdo_mysql mbstring zip gd \
- && rm -rf /var/lib/apt/lists/*
+    libpng-dev libjpeg-dev libfreetype6-dev \
+    libzip-dev zip unzip git curl \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd pdo_mysql mbstring zip \
+    && a2enmod rewrite
 
-# composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+WORKDIR /var/www/html
+COPY . .
 
-WORKDIR /app
-COPY . /app
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# php deps
-RUN composer install --no-dev --optimize-autoloader
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# frontend build (kalau pakai Vite)
-RUN npm install && npm run build
+# Fix permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 storage bootstrap/cache
 
-# laravel folders + permission (ini wajib biar ga "valid cache path" lagi)
-RUN mkdir -p storage/framework/{views,cache,sessions} bootstrap/cache storage/app/public/products \
- && chmod -R 775 storage bootstrap/cache
-
-# storage symlink
-RUN php artisan storage:link || true
-
-# nginx config
-COPY ./deploy/nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 8080
-
-CMD php-fpm -D && nginx -g 'daemon off;'
+EXPOSE 80
+CMD ["apache2-foreground"]
