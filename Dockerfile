@@ -1,12 +1,15 @@
 FROM php:8.2-apache
 
-# Install dependencies
+# Install system deps + PHP extensions
 RUN apt-get update && apt-get install -y \
     libpng-dev libjpeg-dev libfreetype6-dev \
+    libjpeg62-turbo-dev \
     libzip-dev zip unzip git curl \
+    libonig-dev pkg-config \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo_mysql mbstring zip \
-    && a2enmod rewrite
+    && a2enmod rewrite \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
 COPY . .
