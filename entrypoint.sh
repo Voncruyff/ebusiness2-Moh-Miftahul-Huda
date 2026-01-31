@@ -17,6 +17,9 @@ php artisan view:clear || true
 php artisan route:clear || true
 
 # Migrate (pakai --force di production)
-php artisan migrate --force || true
+php artisan migrate --force
+
+# Jalankan seeder (biar akun admin dari seeder masuk)
+php artisan db:seed --force
 
 exec apache2-foreground
