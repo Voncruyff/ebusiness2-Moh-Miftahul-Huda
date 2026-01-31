@@ -1,7 +1,9 @@
 FROM php:8.2-apache
 
+# Laravel harus serve dari /public
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
+# System deps + PHP extensions + Apache rewrite + set docroot + allow .htaccess
 RUN apt-get update && apt-get install -y \
     libpng-dev libjpeg-dev libfreetype6-dev \
     libjpeg62-turbo-dev \
@@ -20,9 +22,10 @@ RUN apt-get update && apt-get install -y \
         '    Require all granted' \
         '</Directory>' \
         > /etc/apache2/conf-available/laravel.conf \
-    && a2enconf laravel
+    && a2enconf laravel \
+    && rm -rf /var/lib/apt/lists/*
 
-# Node untuk Vite build
+# Node.js untuk build Vite
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get update && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
@@ -32,14 +35,24 @@ COPY . .
 
 # Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Install PHP deps (jangan pakai --no-scripts)
 RUN composer install --no-dev --optimize-autoloader
 
-# Build Vite assets (hasilnya public/build/manifest.json)
+# Build Vite assets -> menghasilkan public/build/manifest.json
+# (kalau kamu pakai yarn/pnpm, ganti perintahnya)
 RUN npm ci && npm run build
 
-# Permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 storage bootstrap/cache
+# Buat file SQLite + permission
+RUN mkdir -p database \
+    && touch database/database.sqlite \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 storage bootstrap/cache \
+    && chmod 664 database/database.sqlite
+
+# Entrypoint untuk migrate saat start
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 80
-CMD ["apache2-foreground"]
+CMD ["/entrypoint.sh"]
