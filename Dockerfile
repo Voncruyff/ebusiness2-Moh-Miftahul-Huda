@@ -28,11 +28,13 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /var/www/html
 COPY . .
 
+# Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# IMPORTANT: remove --no-scripts
+# IMPORTANT: jangan pakai --no-scripts
 RUN composer install --no-dev --optimize-autoloader
 
+# Permissions (storage & cache wajib writable)
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 storage bootstrap/cache
 
